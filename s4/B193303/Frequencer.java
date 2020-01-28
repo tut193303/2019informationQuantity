@@ -244,9 +244,9 @@ public class Frequencer implements FrequencerInterface{
         //                                                                   
         //　ここにコードを記述せよ                                           
         //
-	for(int i = 0; i < suffixArray.length; i++){
-		if(targetCompare(suffixArray[i],start,end) == 1){
-			return i;
+	for(int i = suffixArray.length-1; i>=0 ; i--){
+		if(targetCompare(suffixArray[i],start,end) == 0){
+			return i+1;
 		}
 	}                                                                   
         return -1; // この行は変更しなければならない、       
@@ -284,12 +284,12 @@ public class Frequencer implements FrequencerInterface{
                A:o Hi Ho                     
             */
 
-            frequencerObject.setTarget("Hi Ho Hi Ho".getBytes());
+            frequencerObject.setTarget(" Ho Hi Ho".getBytes());
             //                                         
             // ****  Please write code to check subByteStartIndex, and subByteEndIndex
             //
-	    System.out.println("目的が出現する場所:"+frequencerObject.subByteStartIndex(0,5));
-	    System.out.println("目的が出現しなくなる場所:"+frequencerObject.subByteEndIndex(0,5));
+	    System.out.println("目的が出現する場所:"+frequencerObject.subByteStartIndex(0,3));
+	    System.out.println("目的が出現しなくなる場所:"+frequencerObject.subByteEndIndex(0,3));
 
 
             int result = frequencerObject.frequency();

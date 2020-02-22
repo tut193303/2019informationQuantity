@@ -84,6 +84,24 @@ public class Frequencer implements FrequencerInterface{
         //return 0; // この行は変更しなければいけない。 
     }
 
+    public void quick_sort( int left, int right) {
+        if (left>=right) {
+            return;
+        }
+        int p = suffixArray[(left+right)/2];
+        int l = left, r = right, tmp;
+        while(l<=r) {
+            while(suffixCompare(suffixArray[l],p) < 0) { l++; }
+            while(suffixCompare(suffixArray[r],p) > 0) { r--; }
+            if (l<=r) {
+                tmp = suffixArray[l]; suffixArray[l] = suffixArray[r]; suffixArray[r] = tmp;
+                l++; r--;
+            }
+        }
+        quick_sort(left, r); 
+        quick_sort(l, right); 
+    }
+
     public void setSpace(byte []space) { 
         // suffixArrayの前処理は、setSpaceで定義せよ。
         mySpace = space; if(mySpace.length>0) spaceReady = true;
@@ -96,6 +114,9 @@ public class Frequencer implements FrequencerInterface{
         //                                            
         // ここに、int suffixArrayをソートするコードを書け。
         // 　順番はsuffixCompareで定義されるものとする。 
+
+        quick_sort(0, suffixArray.length-1);        
+    /*
 	for(int n=0;n<mySpace.length-1;n++){
 		for(int m=mySpace.length-1;m>n;m--){
 			int temp;
@@ -105,7 +126,9 @@ public class Frequencer implements FrequencerInterface{
 				suffixArray[m]=temp;
 			}
 		}
-	}
+    }
+    */
+
     }
 
     // Suffix Arrayを用いて、文字列の頻度を求めるコード
@@ -211,14 +234,40 @@ public class Frequencer implements FrequencerInterface{
         // ここにコードを記述せよ。                                                 
         //
 
+        int lower = 0;
+        int upper = suffixArray.length - 1;
+        while(lower <= upper){
+            int mid = ( lower + upper ) / 2;
+            int com = targetCompare(suffixArray[mid],start,end);
+            if(mid == 0){
+                return mid; 
+            }
+            else if(com == -1){
+                lower = mid + 1;
+            }
+            else if(com == 1){
+                upper = mid - 1;
+            }
+            else if(targetCompare(suffixArray[mid-1],start,end) != 0){
+                return mid;
+            }
+            else{
+                upper = mid - 1;
+            }
+        }
+        return suffixArray.length;
+    }
+
+/*
 	for(int i = 0; i < suffixArray.length; i++){
 		if(targetCompare(suffixArray[i],start,end) == 0){
 			return i;
 		}
 	}                                                                         
-        return -1; //このコードは変更しなければならない。          
+        return -1; //このコードは変更なければならない。          
     }
-
+    
+*/
     private int subByteEndIndex(int start, int end) {
         //suffix arrayのなかで、目的の文字列の出現しなくなる場所を求めるメソッド
         // 以下のように定義せよ。
@@ -244,6 +293,30 @@ public class Frequencer implements FrequencerInterface{
         //                                                                   
         //　ここにコードを記述せよ                                           
         //
+        int lower = 0;
+        int upper = suffixArray.length - 1;
+        while(lower <= upper){
+            int mid = ( lower + upper ) / 2;
+            int com = targetCompare(suffixArray[mid],start,end);
+            if(mid + 1 == suffixArray.length){
+                return suffixArray.length; 
+            }
+            else if(com == -1){
+                lower = mid + 1;
+            }
+            else if(com == 1){
+                upper = mid - 1;
+            }
+            else if(targetCompare(suffixArray[mid+1],start,end) != 0){
+                return mid + 1;
+            }
+            else{
+                lower = mid + 1;
+            }
+        }
+        return suffixArray.length;
+    }
+/*
 	for(int i = suffixArray.length-1; i>=0 ; i--){
 		if(targetCompare(suffixArray[i],start,end) == 0){
 			return i+1;
@@ -251,6 +324,7 @@ public class Frequencer implements FrequencerInterface{
 	}                                                                   
         return -1; // この行は変更しなければならない、       
     }
+*/
 
 
     // Suffix Arrayを使ったプログラムのホワイトテストは、
